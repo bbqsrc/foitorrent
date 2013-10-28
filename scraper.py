@@ -30,7 +30,6 @@ class Scraper:
             'torrent_cmd': ['./mktorrent',
                 '-a', 'udp://tracker.publicbt.com:80/announce',
                 '-a', 'udp://tracker.openbittorrent.com:80/announce']
-
         }
 
     def generate_torrent(self, directory, fn):
@@ -40,6 +39,9 @@ class Scraper:
         if ret == 0:
             return fn
         return None
+
+    def seed_torrent(self, torrent_path, files_path):
+        subprocess.call(['transmission-cli', '-w', files_path, torrent_path])
 
     def get_start_page(self):
         pass
@@ -185,14 +187,16 @@ class AGDScraper(Scraper):
         if len(o['documents']) == 0:
             logger.warn('No documents found for this request!')
         
-        torrent_path = self.generate_torrent(fpath, o['title'] + ".torrent")
+        tname = o['title'] + ".torrent"
+        torrent_path = self.generate_torrent(fpath, tname)
         if torrent_path is None:
             logger.error("Torrent path is null! Skipping.")
             return
 
-        logger.info("Generated torrent: '%s'" % torrent_path)
+        logger.info("Generated torrent: '%s'" % tname)
+        self.seed_torrent(torrent_path, fpath)
         
-        o['torrent'] = torrent_path
+        o['torrent'] = tname
         self.db.requests.insert(o)
 
     def scrape(self, find_missing=False):
