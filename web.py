@@ -38,6 +38,8 @@ pre {{
 
 <p style='color: red'>Don't bother seeding these example torrents, as they're proof-of-concept and will be regenerated slightly differently sometime this week.</p>
 
+<p>Feel free of course to try downloading any of them to see if they work. (They do!)</p>
+
 <h2>{heading}</h2>
 
 {content}
