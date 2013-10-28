@@ -41,7 +41,7 @@ class Scraper:
         return None
 
     def seed_torrent(self, torrent_path, files_path):
-        subprocess.call(['transmission-cli', '-w', files_path, torrent_path])
+        subprocess.call(['transmission-remote', '-w', files_path, '-a', torrent_path])
 
     def get_start_page(self):
         pass
