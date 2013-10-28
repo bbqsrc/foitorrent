@@ -43,7 +43,7 @@ class HomePageHandler(RequestHandler):
     def get(self):
         self.write(homepage.format(heading="Departments", content="""
 <ul>
-<li><a href="/d/agd">Attorney-General's Department</a></li>
+<li><a href="/d/AGD">Attorney-General's Department</a></li>
 </ul>"""))
 
 class DeptHandler(RequestHandler):
@@ -51,7 +51,7 @@ class DeptHandler(RequestHandler):
         reqs = db.requests.find({"organisation": org})
         urls = []
         for r in reqs:
-            urls.append("<li><a href='/r/%s'>%s</a></li>" % (str(reqs['_id']), reqs['title']))
+            urls.append("<li><a href='/r/%s'>%s</a></li>" % (str(req['_id']), req['title']))
         self.write(homepage.format(heading=org, content="<ul>%s</ul>" % "\n".join(urls)))
 
 class ReqHandler(RequestHandler):
