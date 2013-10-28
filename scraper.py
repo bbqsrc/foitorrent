@@ -38,7 +38,7 @@ class Scraper:
         cmd = self.config['torrent_cmd'] + ['-o', torrent_fn, directory]
         ret = subprocess.call(cmd)
         if ret == 0:
-            return torrent_fn
+            return fn
         return None
 
     def get_start_page(self):
