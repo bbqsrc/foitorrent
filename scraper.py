@@ -324,7 +324,7 @@ class DFATScraper(Scraper):
                 continue
     
             logger.info("Generated torrent: '%s'" % tname)
-            #self.seed_torrent(torrent_path, fpath)
+            self.seed_torrent(torrent_path, fpath)
             
             o['torrent'] = tname
             self.db.requests.insert(o)
