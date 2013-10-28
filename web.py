@@ -36,6 +36,8 @@ pre {{
 
 <p>Welcome to my little experiment in scraping FOI requests from government departments and providing them as .torrent files.</p>
 
+<p style='color: red'>Don't bother seeding these example torrents, as they're proof-of-concept and will be regenerated slightly differently sometime this week.</p>
+
 <h2>{heading}</h2>
 
 {content}
