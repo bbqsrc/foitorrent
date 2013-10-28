@@ -52,7 +52,7 @@ class DeptHandler(RequestHandler):
         urls = []
         for r in reqs:
             urls.append("<li><a href='/r/%s'>%s</a></li>" % (str(reqs['_id']), reqs['title']))
-        self.write(homepage.format(heading=org, "<ul>%s</ul>" % "\n".join(urls)))
+        self.write(homepage.format(heading=org, content="<ul>%s</ul>" % "\n".join(urls)))
 
 class ReqHandler(RequestHandler):
     def get(self, req):
@@ -65,7 +65,7 @@ class ReqHandler(RequestHandler):
         <p><a href="/t/{torrent}">Download Torrent</a></p>
 
         <pre>{json_data}</pre>
-        """.format(torrent=req['torrent'], json_data=bson.json_util.dumps(req, indent=2)))
+        """.format(torrent=req['torrent'], json_data=bson.json_util.dumps(req, indent=2))))
 
 
 if __name__ == "__main__":
