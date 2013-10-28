@@ -30,6 +30,8 @@ pre {{
 </style>
 </head>
 <body>
+<div id='container'>
+
 <h1>foitorrent</h1>
 
 <p>Welcome to my little experiment in scraping FOI requests from government departments and providing them as .torrent files.</p>
@@ -38,6 +40,7 @@ pre {{
 
 {content}
 
+</div>
 </body>
 </html>"""
 
