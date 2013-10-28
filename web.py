@@ -50,7 +50,7 @@ class DeptHandler(RequestHandler):
     def get(self, org):
         reqs = db.requests.find({"organisation": org})
         urls = []
-        for r in reqs:
+        for req in reqs:
             urls.append("<li><a href='/r/%s'>%s</a></li>" % (str(req['_id']), req['title']))
         self.write(homepage.format(heading=org, content="<ul>%s</ul>" % "\n".join(urls)))
 
