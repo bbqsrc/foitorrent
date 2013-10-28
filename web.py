@@ -23,6 +23,10 @@ body {{
     margin: 0 auto;
     max-width: 800px;
 }}
+
+pre {{
+    word-wrap: break-word;
+}}
 </style>
 </head>
 <body>
