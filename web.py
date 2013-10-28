@@ -41,6 +41,10 @@ pre {{
 {content}
 
 </div>
+<hr>
+<div style='text-align: center'>
+<a style='text-decoration: none; color: #0073ae' href="http://brendan.so/about">:)</a>
+</div>
 </body>
 </html>"""
 
