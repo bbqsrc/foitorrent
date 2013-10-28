@@ -77,6 +77,7 @@ class HomePageHandler(RequestHandler):
         self.write(homepage.format(heading="Departments", content="""
 <ul>
 <li><a href="/d/AGD">Attorney-General's Department</a></li>
+<li><a href="/d/DFAT">Department of Foreign Affairs and Trade</a></li>
 </ul>"""))
 
 class DeptHandler(RequestHandler):
