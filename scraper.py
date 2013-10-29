@@ -326,7 +326,7 @@ class DFATScraper(Scraper):
 class DefenceScraper(Scraper):
     DIR = "/foi"
     HOST = "http://www.defence.gov.au"
-    
+
     def get_start_page(self):
         return download_page("http://www.defence.gov.au/foi/disclosure_log.htm")
 
@@ -374,7 +374,7 @@ class DefenceScraper(Scraper):
             "reference": foi_ref,
             "access": node[3].text_content().strip(),
             "exemptions": node[4].text_content().strip(),
-            "date_released": self.parse_date_string(node[0].text_content().strip()[:11]),
+            "date_released": self.parse_date_string(node[0].text_content().split('\n')[0].strip()),
             "date_retrieved": datetime.datetime.utcnow(),
             "original_url": url,
             "documents": []
