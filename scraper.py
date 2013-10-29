@@ -284,20 +284,20 @@ class DFATScraper(Scraper):
         return new_rows
 
     def generate_metadata(self, url, node):
-        foi_ref = row[0].text_content().strip()
+        foi_ref = node[0].text_content().strip()
 
         o = {
             "organisation": "dfat",
             "title": foi_ref,
             "reference": foi_ref,
-            "description": lxml.html.tostring(row[2]).decode().strip(),
-            "date_released": self.parse_date_string(row[1].text_content().strip()),
+            "description": lxml.html.tostring(node[2]).decode().strip(),
+            "date_released": self.parse_date_string(node[1].text_content().strip()),
             "date_retrieved": datetime.datetime.utcnow(),
             "original_url": url,
             "documents": []
         }
 
-        anchors = row[3].cssselect('a')
+        anchors = node[3].cssselect('a')
 
         for a in anchors:
             if a.attrib.get('href') is None:
