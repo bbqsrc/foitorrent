@@ -374,7 +374,7 @@ class DefenceScraper(Scraper):
             "reference": foi_ref,
             "access": node[3].text_content().strip(),
             "exemptions": node[4].text_content().strip(),
-            "date_released": self.parse_date_string(node[0].text_content().split('\n')[0].strip()),
+            "date_released": self.parse_date_string(node[0].text_content().split(' ')[0].strip()),
             "date_retrieved": datetime.datetime.utcnow(),
             "original_url": url,
             "documents": []
