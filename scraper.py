@@ -277,7 +277,8 @@ class DFATScraper(Scraper):
 
             new_rows.append({
                 "url": "http://www.dfat.gov.au/foi/disclosure-log.html",
-                "node": row
+                "node": row,
+                "title": foi_ref
             })
 
         return new_rows
