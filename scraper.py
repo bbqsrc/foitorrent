@@ -262,13 +262,13 @@ class DFATScraper(Scraper):
         return datetime.datetime.strptime(ds, "%d %B %Y")
 
     def find_new_documents(self, page):
-        selector = "#requests tr"
+        selector = "#requests tbody tr"
 
         rows = page.cssselect(selector)
         new_rows = []
 
         for row in rows:
-            if len(row) != 5:
+            if len(row.cssselect('td')) != 5:
                 continue
 
             foi_ref = row[0].text_content().strip()
