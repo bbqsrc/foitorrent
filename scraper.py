@@ -322,7 +322,7 @@ class DFATScraper(Scraper):
         return o
 
 
-class DefenseScraper(Scraper):
+class DefenceScraper(Scraper):
     DIR = "/foi"
     HOST = "http://www.defence.gov.au"
     
@@ -368,7 +368,7 @@ class DefenseScraper(Scraper):
         foi_ref = node[1].text_content().strip()
 
         o = {
-            "organisation": "defense",
+            "organisation": "defence",
             "title": node.cssselect(".foiTitle")[0].text_content().strip(),
             "reference": foi_ref,
             "access": node[3].text_content().strip(),
@@ -410,7 +410,7 @@ class DefenseScraper(Scraper):
 scrapers = {
     "agd": AGDScraper,
     "dfat": DFATScraper,
-    "defense": DefenseScraper
+    "defence": DefenceScraper
 }
 
 if __name__ == "__main__":
