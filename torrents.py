@@ -105,7 +105,9 @@ class TransmissionClient(BitTorrentClient):
         if private is True:
             args.append('-p')
         args.append(path)
-        call(args)
+        ret = call(args)
+        if ret > 0:
+            return None
         return outfile
 
     def add_torrent(self, path, target):
@@ -120,4 +122,4 @@ class TransmissionClient(BitTorrentClient):
         return TransmissionTorrent(torrent)
 
     def clear_all_torrents(self):
-        self.client.remove_torrent(self.client.get_torrents())
+        self.client.remove_torrent([x.id for x in self.client.get_torrents()])
