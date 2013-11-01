@@ -30,6 +30,8 @@ import string
 import urllib.parse
 import subprocess
 
+from .torrents import TransmissionClient
+
 logger = logging.getLogger()
 ch = logging.StreamHandler()
 ch.setFormatter(tornado.log.LogFormatter())
@@ -41,33 +43,30 @@ class Scraper:
     def __init__(self):
         self.db = pymongo.Connection().foitorrent
         self.session = requests.Session()
+        self.client = TransmissionClient()
         self.config = {
             'path': 'requests',
             'torrent_path': 'torrents',
-            'torrent_cmd': ['./mktorrent',
-                '-a', 'udp://tracker.publicbt.com:80/announce',
-                '-a', 'udp://tracker.openbittorrent.com:80/announce']
+            'trackers': ['udp://tracker.publicbt.com:80/announce',
+                'udp://tracker.openbittorrent.com:80/announce'],
+            "comment": "Torrent retrieved from foitorrent: http://foitorrent.brendan.so"
         }
 
     def download_page(self, url):
         return lxml.html.fromstring(re.sub('Â?\u00a0', ' ', self.session.get(url).text))
 
     def generate_torrent(self, directory, fn):
-        fn = self.sanitise_torrent_name(fn)
-        torrent_fn = os.path.join(self.config['torrent_path'], fn)
-        cmd = self.config['torrent_cmd'] + [
-                '-o', torrent_fn,
-                '-c', "Torrent retrieved from foitorrent: http://foitorrent.brendan.so",
-                directory
-        ]
-        ret = subprocess.call(cmd)
-        if ret == 0:
-            return torrent_fn
-        return None
+        torrent_fn = os.path.join(self.config['torrent_path'], self.sanitise_torrent_name(fn))
+        return self.client.create_torrent(torrent_fn, directory, self.config['trackers'],
+                                          comment=self.config['comment'])
 
     def seed_torrent(self, torrent_path, files_path):
         # TODO: put torrents in saner places, flat is not sustainable
-        subprocess.call(['transmission-remote', '-w', os.path.split(files_path)[0], '-a', torrent_path])
+        self.client.add_torrent(torrent_path, files_path)
+
+    def sanitise_request_directory(self, path):
+        return re.sub("[" + string.punctuation + r"\s’‘]", '_', path)
+
 
     def generate_request_path(self, o):
         return os.path.join(
@@ -75,7 +74,7 @@ class Scraper:
                 o['organisation'],
                 o['date_released'].strftime("%Y"),
                 o['date_released'].strftime("%m"),
-                re.sub("[" + string.punctuation + r"\s’‘]", '_', o['title'])
+                self.sanitise_request_directory(o['title'])
             )
 
     def download_documents(self, path, documents):
