@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with foitorrent.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from subprocess import call
+from subprocess import Popen, PIPE
 
 class Torrent:
     def __init__(self, torrent):
@@ -105,8 +105,8 @@ class TransmissionClient(BitTorrentClient):
         if private is True:
             args.append('-p')
         args.append(path)
-        ret = call(args)
-        if ret > 0:
+        out = Popen(args, stdout=PIPE, stderr=PIPE).communicate()[0].decode().strip()
+        if not out.endswith("done!"):
             return None
         return outfile
 
