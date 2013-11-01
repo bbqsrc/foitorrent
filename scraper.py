@@ -201,7 +201,7 @@ class AGDScraper(Scraper):
     def parse_agd_doc_url(self, url):
         x = urllib.parse.urlparse(url)
         if x.path.endswith("WordViewer.aspx"):
-            new_path = urllib.parse.parse_qs(x.query)['id']
+            new_path = urllib.parse.parse_qs(x.query)['id'][0]
             if new_path.startswith('/'):
                 return self.BASE_URL + new_path
             else:
