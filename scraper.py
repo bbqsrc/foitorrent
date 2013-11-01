@@ -36,12 +36,11 @@ ch.setFormatter(tornado.log.LogFormatter())
 logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
-def download_page(url):
-    return lxml.html.fromstring(re.sub('Â?\u00a0', ' ', requests.get(url).text))
 
 class Scraper:
     def __init__(self):
         self.db = pymongo.Connection().foitorrent
+        self.session = requests.Session()
         self.config = {
             'path': 'requests',
             'torrent_path': 'torrents',
@@ -49,6 +48,9 @@ class Scraper:
                 '-a', 'udp://tracker.publicbt.com:80/announce',
                 '-a', 'udp://tracker.openbittorrent.com:80/announce']
         }
+
+    def download_page(self, url):
+        return lxml.html.fromstring(re.sub('Â?\u00a0', ' ', self.session.get(url).text))
 
     def generate_torrent(self, directory, fn):
         fn = self.sanitise_torrent_name(fn)
@@ -110,7 +112,7 @@ class Scraper:
 
     def scrape_request(self, url, node=None):
         if node is None:
-            node = download_page(url)
+            node = self.download_page(url)
         o = self.generate_metadata(url, node)
 
         if o is None:
@@ -162,7 +164,7 @@ class AGDScraper(Scraper):
         url = "http://www.ag.gov.au/RightsAndProtections/FOI/Pages/Freedomofinformationdisclosurelog.aspx"
         if self.find_missing:
             url += "?lsf=date&lso=0"
-        return download_page(url)
+        return self.download_page(url)
 
     def is_anchor_new(self, a):
         x = self.db.requests.find_one({
@@ -192,7 +194,7 @@ class AGDScraper(Scraper):
                 logging.debug("No next page. Done.")
                 return urls
 
-            page = download_page(next_page[0].attrib['href'])
+            page = self.download_page(next_page[0].attrib['href'])
             logging.debug("Next page downloaded.")
 
     def parse_date_string(self, ds):
@@ -256,7 +258,7 @@ class AGDScraper(Scraper):
 
 class DFATScraper(Scraper):
     def get_start_page(self):
-        return download_page("http://www.dfat.gov.au/foi/disclosure-log.html")
+        return self.download_page("http://www.dfat.gov.au/foi/disclosure-log.html")
 
     def parse_date_string(self, ds):
         return datetime.datetime.strptime(ds, "%d %B %Y")
@@ -328,7 +330,7 @@ class DefenceScraper(Scraper):
     HOST = "http://www.defence.gov.au"
 
     def get_start_page(self):
-        return download_page("http://www.defence.gov.au/foi/disclosure_log.htm")
+        return self.download_page("http://www.defence.gov.au/foi/disclosure_log.htm")
 
     def find_new_documents(self, page):
         selector = ".homeBtn a"
@@ -337,7 +339,7 @@ class DefenceScraper(Scraper):
         new_docs = []
         for a in page.cssselect(selector):
             url = self.parse_document_url(a.attrib['href'])
-            subpage = download_page(url)
+            subpage = self.download_page(url)
 
             for tr in subpage.cssselect(table):
                 foi_ref = tr[1].text_content().strip()
