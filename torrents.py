@@ -50,13 +50,16 @@ class BitTorrentClient:
     def create_torrent(self, outfile, path, trackers=[], comment=None, private=False):
         raise NotImplementedError
 
-    def add_torrent(self, path):
+    def add_torrent(self, path, target):
         raise NotImplementedError
 
     def remove_torrent(self, torrent):
         raise NotImplementedError
 
     def get_torrent(self, id):
+        raise NotImplementedError
+
+    def clear_all_torrents(self):
         raise NotImplementedError
 
 
@@ -105,8 +108,8 @@ class TransmissionClient(BitTorrentClient):
         call(args)
         return outfile
 
-    def add_torrent(self, path):
-        torrent = self._get_torrent(self.client.add_torrent(path))
+    def add_torrent(self, path, target):
+        torrent = self._get_torrent(self.client.add_torrent(path, download_dir=target))
         return TransmissionTorrent(torrent)
 
     def remove_torrent(self, torrent):
@@ -115,3 +118,6 @@ class TransmissionClient(BitTorrentClient):
     def get_torrent(self, id):
         torrent = self._get_torrent(self.client.get_torrent(id))
         return TransmissionTorrent(torrent)
+
+    def clear_all_torrents(self):
+        self.client.remove_torrent(self.client.get_torrents())
